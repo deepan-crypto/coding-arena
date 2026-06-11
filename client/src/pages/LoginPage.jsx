@@ -72,9 +72,6 @@ export default function LoginPage() {
           <p className="muted-copy">
             New student? <Link to="/register">Create an account</Link>
           </p>
-          <p className="muted-copy">
-            Administrator? <Link to="/admin/login">Admin login</Link>
-          </p>
         </div>
       </div>
     </div>

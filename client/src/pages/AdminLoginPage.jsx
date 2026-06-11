@@ -74,9 +74,6 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <p className="muted-copy">
-          Student? <Link to="/login">Sign in here</Link>
-        </p>
       </div>
     </div>
   );
