@@ -1,0 +1,118 @@
+services:
+  # 1. MongoDB Database
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - platform-network
+
+  # 2. Node.js Backend API
+  server:
+    build:
+      context: ./server
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongo:27017/coding_assessment
+      - CLIENT_ORIGIN=${CLIENT_ORIGIN:-http://localhost:8080}
+      - PORT=5000
+      - JUDGE0_URL=http://judge0-server:2358
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - judge0-server
+    networks:
+      - platform-network
+
+  # 3. Client Frontend
+  client:
+    build:
+      context: ./client
+      args:
+        VITE_API_URL: /api
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
+    networks:
+      - platform-network
+
+  # 4. Judge0 Server
+  judge0-server:
+    image: judge0/judge0:1.13.1
+    volumes:
+      - ./deployment/judge0/judge0.conf:/judge0.conf:ro
+    privileged: true
+    restart: always
+    depends_on:
+      judge0-db:
+        condition: service_healthy
+      judge0-redis:
+        condition: service_healthy
+    networks:
+      - platform-network
+
+  # 5. Judge0 Worker
+  judge0-worker:
+    image: judge0/judge0:1.13.1
+    command: ["./scripts/workers"]
+    volumes:
+      - ./deployment/judge0/judge0.conf:/judge0.conf:ro
+    privileged: true
+    restart: always
+    depends_on:
+      judge0-db:
+        condition: service_healthy
+      judge0-redis:
+        condition: service_healthy
+    networks:
+      - platform-network
+
+  # 6. Judge0 PostgreSQL Database
+  judge0-db:
+    image: postgres:13.0
+    env_file: ./deployment/judge0/judge0.conf
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - platform-network
+
+  # 7. Judge0 Redis Cache
+  judge0-redis:
+    image: redis:6.0
+    command: [
+      "bash", "-c",
+      'docker-entrypoint.sh --appendonly yes --requirepass "$$REDIS_PASSWORD"'
+    ]
+    env_file: ./deployment/judge0/judge0.conf
+    volumes:
+      - redis-data:/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - platform-network
+
+volumes:
+  mongo_data:
+  postgres-data:
+  redis-data:
+
+networks:
+  platform-network:
+    driver: bridge
