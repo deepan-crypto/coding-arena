@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const [form, setForm] = useState({ fullName: '', email: '', password: '', batch: 'General' });
+  const [form, setForm] = useState({ fullName: '', email: '', password: '', batch: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -43,8 +43,8 @@ export default function RegisterPage() {
             <input value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} type="password" required />
           </label>
           <label>
-            Batch
-            <input value={form.batch} onChange={(event) => setForm({ ...form, batch: event.target.value })} />
+            Batch Number
+            <input type="number" value={form.batch} onChange={(event) => setForm({ ...form, batch: event.target.value })} placeholder="e.g. 1, 2, 3" required />
           </label>
           {error ? <div className="alert-box">{error}</div> : null}
           <button className="primary-button full-width" type="submit" disabled={loading}>

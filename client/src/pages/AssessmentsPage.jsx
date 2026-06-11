@@ -199,11 +199,11 @@ export default function AssessmentsPage() {
           </div>
 
           <label>
-            Assigned Batches
+            Assigned Batch Numbers
             <input
               value={form.assignedBatches}
-              onChange={(e) => setForm({ ...form, assignedBatches: e.target.value })}
-              placeholder={availableBatches.length ? `e.g. ${availableBatches.join(', ')}` : 'General'}
+              onChange={(e) => setForm({ ...form, assignedBatches: e.target.value.replace(/[^0-9, ]/g, '') })}
+              placeholder="e.g. 1, 2, 3"
             />
           </label>
 

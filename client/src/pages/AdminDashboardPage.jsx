@@ -8,7 +8,7 @@ export default function AdminDashboardPage() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newStudent, setNewStudent] = useState({ fullName: '', email: '', password: '', batch: 'General' });
+  const [newStudent, setNewStudent] = useState({ fullName: '', email: '', password: '', batch: '' });
   const [formError, setFormError] = useState('');
   const [formLoading, setFormLoading] = useState(false);
 
@@ -37,7 +37,7 @@ export default function AdminDashboardPage() {
     setFormLoading(true);
     try {
       await api.post('/admin/students', newStudent);
-      setNewStudent({ fullName: '', email: '', password: '', batch: 'General' });
+      setNewStudent({ fullName: '', email: '', password: '', batch: '' });
       setShowAddForm(false);
       await loadData();
     } catch (err) {
@@ -120,7 +120,8 @@ export default function AdminDashboardPage() {
               required
             />
             <input
-              placeholder="Batch"
+              placeholder="Batch Number"
+              type="number"
               value={newStudent.batch}
               onChange={(e) => setNewStudent({ ...newStudent, batch: e.target.value })}
             />

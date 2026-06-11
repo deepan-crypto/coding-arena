@@ -84,7 +84,8 @@ const completeAssessment = asyncHandler(async (req, res) => {
 
 const studentAssessments = asyncHandler(async (req, res) => {
   const assessments = await Assessment.find({
-    $or: [{ assignedStudents: req.user._id }, { assignedBatches: req.user.batch }, { status: { $in: ['live', 'scheduled'] } }]
+    status: { $in: ['live', 'scheduled'] },
+    $or: [{ assignedStudents: req.user._id }, { assignedBatches: String(req.user.batch) }]
   })
     .populate('questions.question')
     .sort({ createdAt: -1 });
