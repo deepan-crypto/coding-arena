@@ -17,6 +17,9 @@ const compilerRoutes = require('./routes/compilerRoutes');
 
 const app = express();
 
+// Trust the Nginx reverse proxy (required for express-rate-limit behind a proxy)
+app.set('trust proxy', 1);
+
 app.use(helmet());
 app.use(
   cors({
