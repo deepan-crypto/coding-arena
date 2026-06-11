@@ -9,7 +9,9 @@ async function seedAdmin() {
 
   const existing = await User.findOne({ email: adminEmail.toLowerCase() });
   if (existing) {
-    console.log('Admin already exists');
+    existing.passwordHash = await User.hashPassword(adminPassword);
+    await existing.save();
+    console.log('Admin password reset to match .env credentials');
   } else {
     const admin = await User.create({
       fullName: 'Platform Admin',

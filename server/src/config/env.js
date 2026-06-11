@@ -35,7 +35,7 @@ module.exports = {
 
   // Groq AI Mentor (uses OpenAI-compatible SDK)
   groqApiKey: process.env.GROQ_API_KEY || '',
-  groqModel: process.env.GROQ_MODEL || 'llama3-8b-8192',
+  groqModel: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
 
   // Admin
   adminEmail: process.env.ADMIN_EMAIL || 'admin@gmail.com',
