@@ -1,8 +1,11 @@
 const OpenAIImport = require('openai');
-const { openaiApiKey, openaiModel } = require('../config/env');
+const { groqApiKey, groqModel } = require('../config/env');
 
 const OpenAI = OpenAIImport.default || OpenAIImport;
-const openaiClient = openaiApiKey ? new OpenAI({ apiKey: openaiApiKey }) : null;
+const groqClient = groqApiKey ? new OpenAI({ 
+  apiKey: groqApiKey,
+  baseURL: 'https://api.groq.com/openai/v1'
+}) : null;
 
 function createFallbackMentorResponse(context) {
   const problemHint = context?.question?.title ? `For ${context.question.title}, think about the core data structure and the edge cases first.` : 'Start by identifying the input shape, constraints, and any repeated work you can eliminate.';
@@ -33,7 +36,7 @@ function sanitizeMentorPayload(payload) {
 }
 
 async function generateMentorResponse(context) {
-  if (!openaiClient) {
+  if (!groqClient) {
     return createFallbackMentorResponse(context);
   }
 
@@ -60,8 +63,8 @@ async function generateMentorResponse(context) {
     2
   );
 
-  const completion = await openaiClient.chat.completions.create({
-    model: openaiModel,
+  const completion = await groqClient.chat.completions.create({
+    model: groqModel,
     response_format: { type: 'json_object' },
     messages: [
       { role: 'system', content: systemPrompt },
@@ -102,7 +105,7 @@ async function chatWithMentor({ messages, problemDescription, studentCode, langu
     studentCode ? `Student's current code:\n\`\`\`${language}\n${studentCode}\n\`\`\`` : 'Student has not written code yet.'
   ].join('\n');
 
-  if (!openaiClient) {
+  if (!groqClient) {
     // Fallback when no API key is configured
     const fallbackResponses = [
       "Great question! 🤔 Think about what data structure would let you look up values in O(1) time. That's the key insight here.",
@@ -120,8 +123,8 @@ async function chatWithMentor({ messages, problemDescription, studentCode, langu
     ...messages.slice(-20)
   ];
 
-  const completion = await openaiClient.chat.completions.create({
-    model: openaiModel,
+  const completion = await groqClient.chat.completions.create({
+    model: groqModel,
     messages: chatMessages,
     temperature: 0.6,
     max_tokens: 500

@@ -32,11 +32,12 @@ module.exports = {
   jwtSecret,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
-  openaiApiKey: process.env.OPENAI_API_KEY || '',
-  openaiModel: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
-  judge0BaseUrl: process.env.JUDGE0_BASE_URL || 'https://judge0-ce.p.rapidapi.com',
-  judge0ApiKey: process.env.JUDGE0_API_KEY || '',
-  judge0ApiHost: process.env.JUDGE0_API_HOST || 'judge0-ce.p.rapidapi.com',
-  adminEmail: process.env.ADMIN_EMAIL || 'admin@platform.local',
+
+  // Groq AI Mentor (uses OpenAI-compatible SDK)
+  groqApiKey: process.env.GROQ_API_KEY || '',
+  groqModel: process.env.GROQ_MODEL || 'llama3-8b-8192',
+
+  // Admin
+  adminEmail: process.env.ADMIN_EMAIL || 'admin@gmail.com',
   adminPassword: process.env.ADMIN_PASSWORD || 'Admin@12345'
 };

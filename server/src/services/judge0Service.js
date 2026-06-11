@@ -1,19 +1,15 @@
 const axios = require('axios');
-const { judge0BaseUrl, judge0ApiKey, judge0ApiHost } = require('../config/env');
 const { ApiError } = require('../utils/ApiError');
 
+// Self-hosted Judge0 URL — no API keys needed
+const JUDGE0_URL = process.env.JUDGE0_URL || 'http://localhost:2358';
+
 const judge0Client = axios.create({
-  baseURL: judge0BaseUrl,
-  headers: judge0ApiKey
-    ? {
-        'X-RapidAPI-Key': judge0ApiKey,
-        'X-RapidAPI-Host': judge0ApiHost
-      }
-    : {}
+  baseURL: JUDGE0_URL
 });
 
 async function runJudge0Submission({ languageId, sourceCode, stdin = '', expectedOutput = '' }) {
-  if (!judge0BaseUrl) {
+  if (!JUDGE0_URL) {
     throw new ApiError(500, 'Judge0 is not configured');
   }
 
