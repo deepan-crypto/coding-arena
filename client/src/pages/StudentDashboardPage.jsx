@@ -22,9 +22,6 @@ export default function StudentDashboardPage() {
     load();
   }, []);
 
-  const totalAttempts = dashboard.recentSubmissions.length;
-  const totalScore = dashboard.recentSubmissions.reduce((sum, s) => sum + (s.score || 0), 0);
-  const avgScore = totalAttempts ? Math.round(totalScore / totalAttempts) : 0;
 
   return (
     <div className="dashboard-stack">
@@ -37,8 +34,6 @@ export default function StudentDashboardPage() {
 
       <section className="stat-grid stat-grid-3">
         <StatCard label="Available Assessments" value={dashboard.upcomingAssessments.length} accent="var(--accent)" />
-        <StatCard label="Recent Submissions" value={totalAttempts} accent="var(--accent-2)" />
-        <StatCard label="Average Score" value={`${avgScore}%`} accent="var(--accent)" />
       </section>
 
       {/* Assessments */}
@@ -84,54 +79,26 @@ export default function StudentDashboardPage() {
         </div>
       </section>
 
-      <section className="panel-grid-two">
-        {/* Recent Submissions */}
-        <article className="panel-card">
-          <h3>📊 Recent Submissions</h3>
-          <div className="table-list">
-            {dashboard.recentSubmissions.length === 0 && (
-              <p className="muted-copy">No submissions yet. Start solving!</p>
-            )}
-            {dashboard.recentSubmissions.map((submission) => (
-              <div className="table-row" key={submission._id}>
-                <div>
-                  <strong>{submission.question?.title || 'Unknown'}</strong>
-                  <div className="muted-copy">
-                    <span className={submission.verdict === 'Accepted' ? 'text-success' : 'text-danger'}>
-                      {submission.verdict}
-                    </span>
-                    {' · '}{submission.score}% · {submission.language}
-                  </div>
-                </div>
-                <Link className="secondary-button small-button" to={`/results/${submission._id}`}>
-                  View
-                </Link>
+      {/* Leaderboard */}
+      <section className="panel-card">
+        <h3>🏆 Leaderboard</h3>
+        <div className="table-list">
+          {dashboard.leaderboard.length === 0 && (
+            <p className="muted-copy">No rankings yet.</p>
+          )}
+          {dashboard.leaderboard.map((entry, index) => (
+            <div className="table-row" key={String(entry._id) || index}>
+              <div>
+                <strong>
+                  {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+                  {' '}Rank {index + 1}
+                </strong>
+                <div className="muted-copy">{entry.attempts} submissions</div>
               </div>
-            ))}
-          </div>
-        </article>
-
-        {/* Leaderboard */}
-        <article className="panel-card">
-          <h3>🏆 Leaderboard</h3>
-          <div className="table-list">
-            {dashboard.leaderboard.length === 0 && (
-              <p className="muted-copy">No rankings yet.</p>
-            )}
-            {dashboard.leaderboard.map((entry, index) => (
-              <div className="table-row" key={String(entry._id) || index}>
-                <div>
-                  <strong>
-                    {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
-                    {' '}Rank {index + 1}
-                  </strong>
-                  <div className="muted-copy">{entry.attempts} submissions</div>
-                </div>
-                <span className="pill success">{entry.totalScore} pts</span>
-              </div>
-            ))}
-          </div>
-        </article>
+              <span className="pill success">{entry.totalScore} pts</span>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );

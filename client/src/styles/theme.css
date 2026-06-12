@@ -16,6 +16,15 @@
   --radius-xl: 14px;
   --radius-lg: 10px;
   --radius-md: 8px;
+  --btn-secondary-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-bg: rgba(23, 23, 23, 0.86);
+  --pill-bg: rgba(255, 255, 255, 0.055);
+  --row-bg: rgba(255, 255, 255, 0.04);
+  --toolbar-bg: rgba(255, 255, 255, 0.035);
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --code-bg: rgba(0, 0, 0, 0.22);
+  --pill-success-color: #62d584;
+  --pill-danger-color: #ff8582;
 }
 
 :root[data-theme='light'] {
@@ -33,6 +42,15 @@
   --accent-2: #2db55d;
   --danger: #dc2626;
   --shadow: 0 18px 44px rgba(15, 23, 42, 0.1);
+  --btn-secondary-bg: rgba(0, 0, 0, 0.05);
+  --sidebar-bg: rgba(255, 255, 255, 0.92);
+  --pill-bg: rgba(0, 0, 0, 0.05);
+  --row-bg: rgba(0, 0, 0, 0.03);
+  --toolbar-bg: rgba(0, 0, 0, 0.03);
+  --hover-bg: rgba(0, 0, 0, 0.06);
+  --code-bg: rgba(0, 0, 0, 0.05);
+  --pill-success-color: #15803d;
+  --pill-danger-color: #dc2626;
 }
 
 * {
@@ -142,7 +160,7 @@ label {
 
 .secondary-button {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--btn-secondary-bg);
   border: 1px solid var(--border);
 }
 
@@ -177,7 +195,7 @@ label {
   gap: 1.25rem;
   padding: 1.4rem;
   border-right: 1px solid var(--border);
-  background: rgba(23, 23, 23, 0.86);
+  background: var(--sidebar-bg);
   backdrop-filter: blur(18px);
 }
 
@@ -345,7 +363,7 @@ label {
   padding: 0.38rem 0.72rem;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.055);
+  background: var(--pill-bg);
   font-size: 0.82rem;
   line-height: 1.2;
 }
@@ -446,7 +464,7 @@ label {
   flex-wrap: wrap;
   padding: 1rem 1.1rem;
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--row-bg);
   border: 1px solid var(--border);
 }
 
@@ -661,7 +679,7 @@ label {
   padding: 0 1rem;
   height: 48px;
   min-height: 48px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--toolbar-bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -705,7 +723,7 @@ label {
 }
 
 .minimal-select:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--hover-bg);
   color: var(--text);
 }
 
@@ -718,7 +736,7 @@ label {
 }
 
 .icon-button:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--hover-bg);
   color: var(--text);
 }
 
@@ -754,7 +772,7 @@ label {
   padding: 0 1rem;
   height: 48px;
   min-height: 48px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--toolbar-bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -825,7 +843,7 @@ label {
 .console-textarea {
   flex-grow: 1;
   min-height: 96px;
-  background: rgba(0, 0, 0, 0.22);
+  background: var(--code-bg);
   border: 1px solid var(--border);
   resize: none;
 }
@@ -875,13 +893,13 @@ label {
 
 .pill.success {
   border-color: rgba(45, 181, 93, 0.38);
-  color: #62d584;
+  color: var(--pill-success-color);
   background: rgba(45, 181, 93, 0.08);
 }
 
 .pill.danger {
   border-color: rgba(239, 71, 67, 0.38);
-  color: #ff8582;
+  color: var(--pill-danger-color);
   background: rgba(239, 71, 67, 0.08);
 }
 
@@ -1082,7 +1100,7 @@ label {
 }
 
 .output-pre {
-  background: rgba(0, 0, 0, 0.24);
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 1rem;
@@ -1108,7 +1126,7 @@ label {
   gap: 0.5rem;
   padding: 0.95rem;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--row-bg);
   border: 1px solid var(--border);
 }
 
@@ -1125,7 +1143,7 @@ label {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.85rem;
   margin-top: 0.5rem;
-  background: rgba(0, 0, 0, 0.18);
+  background: var(--code-bg);
   padding: 0.85rem;
   border-radius: 8px;
 }
@@ -1169,7 +1187,7 @@ label {
 }
 
 .example-io pre {
-  background: rgba(0, 0, 0, 0.22);
+  background: var(--code-bg);
   border: 1px solid var(--border);
   padding: 0.65rem;
   border-radius: 7px;
@@ -1185,7 +1203,7 @@ label {
   padding: 0.95rem;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--row-bg);
 }
 
 .example-card strong {
@@ -1286,7 +1304,7 @@ label {
   gap: 0.75rem;
   padding: 0.75rem;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--row-bg);
   border: 1px solid var(--border);
   margin-bottom: 0.5rem;
 }
@@ -1400,7 +1418,7 @@ label {
   padding: 0 1rem;
   height: 48px;
   min-height: 48px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--toolbar-bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -1495,7 +1513,7 @@ label {
   gap: 0.5rem;
   padding: 0.75rem;
   border-top: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--toolbar-bg);
 }
 
 .chat-input {
