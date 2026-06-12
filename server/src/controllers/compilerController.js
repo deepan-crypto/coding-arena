@@ -98,9 +98,8 @@ exports.submitCode = async (req, res, next) => {
     let firstErrorStatus = null;
     let firstCompileOutput = '';
 
-    // Run against each test case sequentially (wait=true)
-    // For a production system with many test cases, batch submissions are recommended.
-    for (const testCase of testCases) {
+    // Run against each test case concurrently instead of sequentially
+    const testCasePromises = testCases.map(async (testCase) => {
       const payload = {
         source_code: code,
         language_id: languageId,
@@ -113,37 +112,49 @@ exports.submitCode = async (req, res, next) => {
       try {
         const response = await axios.post(`${JUDGE0_URL}/submissions?base64_encoded=false&wait=true`, payload);
         const result = response.data;
-
         const statusDesc = result.status ? result.status.description : 'Unknown';
         const isPassed = result.status && result.status.id === 3; // 3 = Accepted in Judge0
 
-        if (isPassed) {
-          passedCount++;
-        }
-
-        if (!isPassed && !firstErrorStatus) {
-          firstErrorStatus = statusDesc;
-          firstCompileOutput = result.compile_output || '';
-        }
-
-        testResults.push({
-          input: testCase.input,
-          expectedOutput: testCase.output,
-          actualOutput: result.stdout || result.stderr || '',
-          passed: isPassed,
-          isHidden: testCase.isSample === false,
-          verdict: statusDesc
-        });
+        return {
+          testCase,
+          isPassed,
+          statusDesc,
+          compileOutput: result.compile_output || '',
+          stdout: result.stdout || '',
+          stderr: result.stderr || ''
+        };
       } catch (err) {
-        testResults.push({
-          input: testCase.input,
-          expectedOutput: testCase.output,
-          actualOutput: '',
-          passed: false,
-          isHidden: testCase.isSample === false,
-          verdict: 'Judge0 API Error'
-        });
+        return {
+          testCase,
+          isPassed: false,
+          statusDesc: 'Judge0 API Error',
+          compileOutput: '',
+          stdout: '',
+          stderr: ''
+        };
       }
+    });
+
+    const results = await Promise.all(testCasePromises);
+
+    for (const res of results) {
+      if (res.isPassed) {
+        passedCount++;
+      }
+
+      if (!res.isPassed && !firstErrorStatus) {
+        firstErrorStatus = res.statusDesc;
+        firstCompileOutput = res.compileOutput;
+      }
+
+      testResults.push({
+        input: res.testCase.input,
+        expectedOutput: res.testCase.output,
+        actualOutput: res.stdout || res.stderr || '',
+        passed: res.isPassed,
+        isHidden: res.testCase.isSample === false,
+        verdict: res.statusDesc
+      });
     }
 
     const totalCount = testCases.length;

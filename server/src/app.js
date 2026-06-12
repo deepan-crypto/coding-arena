@@ -33,7 +33,7 @@ app.use(morgan('dev'));
 app.use(
   rateLimit({
     windowMs: 60 * 1000,
-    limit: 120
+    limit: 1000 // Increased from 120 for higher concurrency
   })
 );
 

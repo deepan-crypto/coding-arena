@@ -11,7 +11,9 @@ async function connectDB() {
   }
 
   mongoose.set('strictQuery', true);
-  await mongoose.connect(mongoUri);
+  await mongoose.connect(mongoUri, {
+    maxPoolSize: 500
+  });
   return mongoose.connection;
 }
 

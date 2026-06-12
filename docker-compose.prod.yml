@@ -62,6 +62,8 @@ services:
   judge0-worker:
     image: judge0/judge0:1.13.1
     command: ["./scripts/workers"]
+    deploy:
+      replicas: 5
     volumes:
       - ./deployment/judge0/judge0.conf:/judge0.conf:ro
     privileged: true
