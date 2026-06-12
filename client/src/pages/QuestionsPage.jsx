@@ -21,6 +21,41 @@ const blankForm = {
   hiddenTestCases: '[]'
 };
 
+function parseTestCases(value, label) {
+  try {
+    const parsed = JSON.parse(value || '[]');
+
+    if (!Array.isArray(parsed)) {
+      throw new Error(`${label} must be a JSON array.`);
+    }
+
+    parsed.forEach((testCase, index) => {
+      if (!testCase || typeof testCase !== 'object' || Array.isArray(testCase)) {
+        throw new Error(`${label} item ${index + 1} must be an object.`);
+      }
+
+      if (testCase.input === undefined || testCase.output === undefined) {
+        throw new Error(`${label} item ${index + 1} must include input and output.`);
+      }
+    });
+
+    return parsed.map((testCase) => ({
+      ...testCase,
+      input: String(testCase.input),
+      output: String(testCase.output),
+      explanation: testCase.explanation ? String(testCase.explanation) : ''
+    }));
+  } catch (err) {
+    if (err instanceof SyntaxError) {
+      throw new Error(
+        `${label} is invalid JSON. Use double quotes around text values and escape line breaks as \\n.`
+      );
+    }
+
+    throw err;
+  }
+}
+
 export default function QuestionsPage() {
   const [questions, setQuestions] = useState([]);
   const [form, setForm] = useState(blankForm);
@@ -51,8 +86,8 @@ export default function QuestionsPage() {
       const payload = {
         ...form,
         tags: form.tags.split(',').map((tag) => tag.trim()).filter(Boolean),
-        visibleTestCases: JSON.parse(form.visibleTestCases || '[]'),
-        hiddenTestCases: JSON.parse(form.hiddenTestCases || '[]'),
+        visibleTestCases: parseTestCases(form.visibleTestCases, 'Visible test cases'),
+        hiddenTestCases: parseTestCases(form.hiddenTestCases, 'Hidden test cases'),
         timeLimit: Number(form.timeLimit),
         memoryLimit: Number(form.memoryLimit)
       };
@@ -67,7 +102,7 @@ export default function QuestionsPage() {
       setEditingId('');
       await loadQuestions();
     } catch (submitError) {
-      setError(submitError.response?.data?.message || 'Unable to save question');
+      setError(submitError.response?.data?.message || submitError.message || 'Unable to save question');
     } finally {
       setSaving(false);
     }
@@ -172,16 +207,7 @@ export default function QuestionsPage() {
             </label>
           </div>
 
-          <div className="form-row-2">
-            <label>
-              Time Limit (s)
-              <input type="number" value={form.timeLimit} onChange={(e) => setForm({ ...form, timeLimit: e.target.value })} />
-            </label>
-            <label>
-              Memory Limit (MB)
-              <input type="number" value={form.memoryLimit} onChange={(e) => setForm({ ...form, memoryLimit: e.target.value })} />
-            </label>
-          </div>
+
 
           {/* Starter code with tabs */}
           <div className="starter-code-section">
@@ -205,11 +231,13 @@ export default function QuestionsPage() {
           <label>
             Visible test cases (JSON)
             <textarea rows="5" value={form.visibleTestCases} onChange={(e) => setForm({ ...form, visibleTestCases: e.target.value })} className="code-textarea" placeholder='[{"input": "...", "output": "...", "explanation": "..."}]' />
+            <span className="field-help">{'Example: [{"input":"1\\n1 2","output":"3","explanation":"Sum of 1+2 is 3"}]'}</span>
           </label>
 
           <label>
             Hidden test cases (JSON)
             <textarea rows="5" value={form.hiddenTestCases} onChange={(e) => setForm({ ...form, hiddenTestCases: e.target.value })} className="code-textarea" placeholder='[{"input": "...", "output": "..."}]' />
+            <span className="field-help">Use valid JSON only. Text values need double quotes.</span>
           </label>
 
           {error ? <div className="alert-box">{error}</div> : null}
