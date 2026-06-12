@@ -3,7 +3,6 @@ import api from '../api/client';
 
 const blankForm = {
   title: '',
-  slug: '',
   difficulty: 'Easy',
   description: '',
   constraints: '',
@@ -112,7 +111,6 @@ export default function QuestionsPage() {
     setEditingId(question._id);
     setForm({
       title: question.title,
-      slug: question.slug,
       difficulty: question.difficulty,
       description: question.description,
       constraints: question.constraints || '',
@@ -168,20 +166,14 @@ export default function QuestionsPage() {
             <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
           </label>
 
-          <div className="form-row-2">
-            <label>
-              Slug
-              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="auto-generated" />
-            </label>
-            <label>
-              Difficulty
-              <select value={form.difficulty} onChange={(e) => setForm({ ...form, difficulty: e.target.value })}>
-                <option>Easy</option>
-                <option>Medium</option>
-                <option>Hard</option>
-              </select>
-            </label>
-          </div>
+          <label>
+            Difficulty
+            <select value={form.difficulty} onChange={(e) => setForm({ ...form, difficulty: e.target.value })}>
+              <option>Easy</option>
+              <option>Medium</option>
+              <option>Hard</option>
+            </select>
+          </label>
 
           <label>
             Description *

@@ -163,21 +163,7 @@ export default function AssessmentsPage() {
             <textarea rows="3" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </label>
 
-          <div className="form-row-2">
-            <label>
-              Duration (minutes)
-              <input type="number" value={form.durationMinutes} onChange={(e) => setForm({ ...form, durationMinutes: e.target.value })} />
-            </label>
-            <label>
-              Status
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}>
-                <option value="draft">Draft</option>
-                <option value="scheduled">Scheduled</option>
-                <option value="live">Live</option>
-                <option value="completed">Completed</option>
-              </select>
-            </label>
-          </div>
+
 
           {/* Question Selection */}
           <div className="question-selector">

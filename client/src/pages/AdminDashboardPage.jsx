@@ -79,8 +79,6 @@ export default function AdminDashboardPage() {
         <StatCard label="Total Students" value={stats?.totalStudents ?? '...'} accent="var(--accent)" />
         <StatCard label="Total Assessments" value={stats?.totalAssessments ?? '...'} accent="var(--accent-2)" />
         <StatCard label="Total Questions" value={stats?.totalQuestions ?? '...'} accent="var(--accent)" />
-        <StatCard label="Total Submissions" value={stats?.totalSubmissions ?? '...'} accent="var(--accent-2)" />
-        <StatCard label="Average Score" value={stats?.averageScore != null ? `${stats.averageScore}%` : '...'} accent="var(--accent)" />
         <StatCard label="AI Mentor Requests" value={stats?.aiMentorRequests ?? '...'} accent="var(--accent-2)" />
       </section>
 
